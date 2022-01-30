@@ -21,6 +21,9 @@
     "analyze": "size-limit --why",
     "release": "release-it"
   },
+  "repository": {
+    "url": "https://github.com/duongdev/infinity-js"
+  },
   "peerDependencies": {},
   "husky": {
     "hooks": {

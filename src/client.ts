@@ -13,7 +13,7 @@ import {
   Attribute,
   Folder,
   AttributeType,
-} from './infinity-types'
+} from './types'
 
 const MAX_REQUESTS_PER_MINUTE = 180
 

@@ -1,5 +1,5 @@
 {
-  "version": "0.1.0",
+  "version": "0.0.0",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -7,8 +7,9 @@
     "dist",
     "src"
   ],
-  "engines": {
-    "node": ">=10"
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
   },
   "scripts": {
     "start": "tsdx watch",
@@ -40,7 +41,7 @@
     "arrowParens": "always",
     "endOfLine": "lf"
   },
-  "name": "infinity-js",
+  "name": "infinity-sdk",
   "author": "Dustin Do",
   "module": "dist/infinity-js.esm.js",
   "size-limit": [
@@ -54,6 +55,7 @@
     }
   ],
   "devDependencies": {
+    "@release-it/conventional-changelog": "4.1.0",
     "@size-limit/preset-small-lib": "^7.0.5",
     "@types/debug": "4.1.7",
     "debug": "4.3.3",

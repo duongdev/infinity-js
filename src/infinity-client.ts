@@ -14,7 +14,6 @@ import {
   Folder,
   AttributeType,
 } from './infinity-types'
-import { first, isEmpty } from 'lodash'
 
 const MAX_REQUESTS_PER_MINUTE = 180
 
@@ -84,7 +83,7 @@ export class InfinityClient {
   }
 
   async listAttributes(params?: { limit?: number; after?: string }) {
-    if (!isEmpty(this.attributes)) return this.attributes
+    if (!this.attributes) return this.attributes
 
     const { workspace, board } = this
 
@@ -142,7 +141,7 @@ export class InfinityClient {
   }
 
   async listBoards(params?: { limit?: number }) {
-    if (!isEmpty(this.boards)) return this.boards
+    if (!this.boards) return this.boards
 
     const { workspace } = this
 
@@ -162,7 +161,7 @@ export class InfinityClient {
   }
 
   async listFolders(params?: { limit?: number }) {
-    if (!isEmpty(this.folders)) return this.folders
+    if (!this.folders) return this.folders
 
     const { workspace, board } = this
 
@@ -192,13 +191,13 @@ export class InfinityClient {
 
   async findFolderByName(name: string) {
     // Get from cache
-    if (!isEmpty(this.foldersByName[name])) return this.foldersByName[name]
+    if (!this.foldersByName[name]) return this.foldersByName[name]
 
     const folders = await this.listAllFolders()
 
     const folder = folders?.find((f) => f.name === name)
 
-    if (!isEmpty(folder)) {
+    if (!folder) {
       this.foldersByName[name] = folder!
     }
 
@@ -206,7 +205,7 @@ export class InfinityClient {
   }
 
   async getFolder(folderId: ID) {
-    if (!isEmpty(this.folderItems[folderId])) return this.folderItems[folderId]
+    if (!this.folderItems[folderId]) return this.folderItems[folderId]
 
     const { workspace, board } = this
 
@@ -214,7 +213,7 @@ export class InfinityClient {
       `/workspaces/${workspace}/boards/${board}/folders/${folderId}`,
     )
 
-    if (!isEmpty(data)) this.folderItems[folderId] = data!
+    if (!data) this.folderItems[folderId] = data!
 
     return data ?? null
   }
@@ -301,7 +300,7 @@ export class InfinityClient {
       ...options,
     })
 
-    return first(items) || null
+    return items?.[0] || null
   }
 
   async createItem(params: {

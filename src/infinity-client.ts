@@ -1,6 +1,6 @@
-import axios, { AxiosInstance } from 'axios'
-import rateLimit from 'axios-rate-limit'
-import axiosRetry from 'axios-retry'
+import axios, { AxiosInstance, AxiosRequestHeaders } from 'axios'
+import rateLimit, { rateLimitOptions } from 'axios-rate-limit'
+import axiosRetry, { IAxiosRetryConfig } from 'axios-retry'
 
 import Debug from 'debug'
 import {
@@ -33,6 +33,10 @@ export interface InfinityOptions {
   workspaceId?: string
   /** If not specified, use process.env.INFINITY_BOARD_ID */
   boardId?: string
+  /** Customize axios request headers */
+  headers?: AxiosRequestHeaders
+  rateLimitOptions?: rateLimitOptions
+  retryConfig?: IAxiosRetryConfig
 }
 
 export class InfinityClient {
@@ -49,6 +53,8 @@ export class InfinityClient {
   private workspace: ID
 
   constructor(infinityOptions: InfinityOptions) {
+    const { headers, rateLimitOptions, retryConfig } = infinityOptions
+
     const token = infinityOptions.token || process.env.INFINITY_TOKEN
     const workspaceId =
       infinityOptions.workspaceId || process.env.INFINITY_WORKSPACE_ID
@@ -66,16 +72,18 @@ export class InfinityClient {
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
       Accept: 'application/json',
+      ...headers,
     }
 
     // Apply axios-rate-limit
     client = rateLimit(client, {
       maxRequests: MAX_REQUESTS_PER_MINUTE,
       perMilliseconds: 60 * 1000, // per minute
+      ...rateLimitOptions,
     })
 
     // Apply axios-retry
-    axiosRetry(client, { retries: 3 })
+    axiosRetry(client, { retries: 3, ...retryConfig })
 
     this.client = client
     this.board = boardId
